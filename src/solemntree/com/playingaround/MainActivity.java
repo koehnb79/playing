@@ -13,5 +13,11 @@ public class MainActivity extends Activity
 	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+		
+		theview seen=new theview(this);
+		seen=(theview)findViewById(R.id.surface);
+	//	theview blue=new theview(this);
+	//	seen=blue;
+		
     }
 }
