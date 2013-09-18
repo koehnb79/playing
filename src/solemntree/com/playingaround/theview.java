@@ -94,24 +94,56 @@ public class theview extends SurfaceView implements SurfaceHolder.Callback
         circle=new Circles();
         painter=new Paint();
         color=Color.CYAN;
-        circle.move(5,5);
+       // circle.move(5,5);
         circle2.move(100,100);
+        boolean moving=false;
         setOnTouchListener(new OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(View view, MotionEvent event) {
                 Log.d("Solemntree", "made it to the touch!");
                 synchronized (getHolder()) {
-                for (int x=0; x<100; x++) {
-                    circle.move(x,5);
+                    switch( event.getAction() ){
+                        case MotionEvent.ACTION_DOWN:
+                            final int x = (int)event.getX();
+                            final int y = (int)event.getY();
+                            if (x>=circle.getTheX()-120 && x<=circle.getTheX()+120
+                                    && y>=circle.getTheY()-120 && y<=circle.getTheY()+120)
+                                circle.move((int)event.getX(), (int)event.getY());
+                            //final Rect bounds = mTiles.getBounds();
+                            invalidate();
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            //if( moving ){
+                                final int xx = (int)event.getX();
+                                final int yy = (int)event.getY();
+                            if (xx>=circle.getTheX()-120 && xx<=circle.getTheX()+120
+                            && yy>=circle.getTheY()-120 && yy<=circle.getTheY()+120)
+                                circle.move((int)event.getX(), (int)event.getY());
+                            invalidate();
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                           // moving = false;
+                            return true;
+                    }
+               // for (int x=0; x<100; x++) {
 
-                }
-                    color=Color.RED;
-                    invalidate();
+                  //  while (motionEvent.getAction()==MotionEvent.ACTION_MOVE)
+                  //  {
 
+                   //
+                  //  {
+
+
+                //}
+                  //  color=Color.RED;
+
+                 //   }
+              //  }
                 }
                 return false;
             }
         });
+
         final Handler billers=new Handler();
 		this.setBackgroundColor(Color.BLUE);
 
@@ -140,6 +172,7 @@ public class theview extends SurfaceView implements SurfaceHolder.Callback
         private int Y;
         private Canvas canvas;
         private Paint painter;
+        boolean firstRun=false;
         public Circles()
 		{
            // canvas=can;
@@ -149,8 +182,15 @@ public class theview extends SurfaceView implements SurfaceHolder.Callback
 		}
 		public void draw(Canvas can, Paint painter)
 		{
+            if (firstRun)
+            {
+                X=can.getWidth()/2-10;
+                Y=can.getHeight()/2-10;
+
+                firstRun=false;
+            }
             Log.d("Solemntree", "made it to the circle draw");
-			can.drawCircle(X, Y, 20, painter);
+			can.drawCircle(X, Y, 120, painter);
 			// TODO: Implement this method
 		}
 
@@ -160,6 +200,13 @@ public class theview extends SurfaceView implements SurfaceHolder.Callback
             Y=y;
           //  draw(canvas, painter);
         }
-		
+		public int getTheX()
+        {
+            return X;
+        }
+        public int getTheY()
+        {
+            return Y;
+        }
 	}
 }
